@@ -3,6 +3,7 @@ package com.davison.web_screping.bot;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 import org.openqa.selenium.By;
@@ -64,13 +65,9 @@ public class Scraper {
                 
                 WebElement downloadInfo = driver.findElement(By.xpath("/html/body/div[1]/main/div/div[2]/div[2]/div[1]/div/div[1]/div[3]/div/div/div/div/div[2]/div[1]/div/div[1]/div[2]"));
                 WebElement uploadInfo = driver.findElement(By.xpath("/html/body/div[1]/main/div/div[2]/div[2]/div[1]/div/div[1]/div[3]/div/div/div/div/div[2]/div[1]/div/div[2]/div[2]"));
-                TakesScreenshot screenshot = (TakesScreenshot) driver;
-                byte[] screenshotBytes = screenshot.getScreenshotAs(OutputType.BYTES);
-                //System.out.println("Caminho do arquivo: " + java.nio.file.Paths.get(this.screenshotPath, "teste.png"));
-                java.nio.file.Files.write(
-                    java.nio.file.Paths.get(this.screenshotPath, "teste.png"),
-                    screenshotBytes
-                );
+                
+                takeSreenshot();
+
                 System.out.printf("Download: %s - Upload: %s",downloadInfo.getText(), uploadInfo.getText());
       
             } catch (org.openqa.selenium.NoSuchElementException e) {
@@ -83,6 +80,24 @@ public class Scraper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void takeSreenshot() throws IOException{
+        TakesScreenshot screenshot = (TakesScreenshot) driver;
+        byte[] screenshotBytes = screenshot.getScreenshotAs(OutputType.BYTES);
+        String saveFileStr = String.format("teste_automatizado_dia[%d_%d_%d]_hora(%d_%d_%d).png",
+        LocalDateTime.now().getDayOfMonth(),
+        LocalDateTime.now().getMonthValue(),
+        LocalDateTime.now().getYear(),
+        LocalDateTime.now().getHour(),
+        LocalDateTime.now().getMinute(),
+        LocalDateTime.now().getSecond()
+        );
+        
+        java.nio.file.Files.write(
+            java.nio.file.Paths.get(this.screenshotPath, saveFileStr),
+            screenshotBytes
+        );
     }
 
 }
