@@ -1,0 +1,3 @@
+url=https://www.brasilbandalarga.com.br/
+cookiesButton=//*[@id=\"card0\"]/div/div[2]/button[2]
+startButton=//*[@id=\"btnIniciar\"] 
