@@ -1,1 +1,6 @@
 /.vscode
+
+/web_scraper/src/main/screenshots
+
+#Arquivo de configuração
+web_scraper/target/classes/config.properties
