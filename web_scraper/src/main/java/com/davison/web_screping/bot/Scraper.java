@@ -61,8 +61,23 @@ public class Scraper {
                 WebElement startButton = driver.findElement(By.xpath("//*[@id=\"btnIniciar\"]"));
                 startButton.click();
                 
-                Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(this.waitingTime));
-                wait.until(d -> startButton.isDisplayed());
+                Thread waitThread = new Thread(() -> {
+                    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(this.waitingTime));
+                    wait.until(d -> startButton.isDisplayed());
+                });
+
+                Thread loadingThread = new Thread(this.loading());
+
+                waitThread.start();
+                loadingThread.start();
+        
+                try {
+                    waitThread.join();
+                    loadingThread.join();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    e.printStackTrace();
+                }
                 
                 WebElement downloadInfo = driver.findElement(By.xpath("/html/body/div[1]/main/div/div[2]/div[2]/div[1]/div/div[1]/div[3]/div/div/div/div/div[2]/div[1]/div/div[1]/div[2]"));
                 WebElement uploadInfo = driver.findElement(By.xpath("/html/body/div[1]/main/div/div[2]/div[2]/div[1]/div/div[1]/div[3]/div/div/div/div/div[2]/div[1]/div/div[2]/div[2]"));
@@ -107,4 +122,37 @@ public class Scraper {
         }
     }
 
+    private Runnable loading() throws InterruptedException{
+        Integer time = this.waitingTime;
+        String loadingBar = "______________________________";
+        while(time >= 0){
+            cleanScrean();
+            double progress = ((double) (this.waitingTime - time) / this.waitingTime) * 100.0;
+            System.out.printf("Coletando os dados [%.2f%%]:\n%s",progress,loadingBar);
+            Thread.sleep(Duration.ofSeconds(1));
+            if(time%2 == 0){
+                loadingBar = loadingBarUpdate(loadingBar);
+            }
+            time--;
+        }
+        cleanScrean();
+        System.out.println("Coleta Finalizada!");
+        return null;
+    }
+    
+    private void cleanScrean(){
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+    
+    private String loadingBarUpdate(String loadingbar) {
+        char[] charArray = loadingbar.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            if (charArray[i] == '_') {
+                charArray[i] = '#';
+                return new String(charArray);
+            }
+        }
+        return loadingbar;
+    }
 }

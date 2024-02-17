@@ -4,3 +4,4 @@
 
 #Arquivo de configuração
 web_scraper/target/classes/config.properties
+web_scraper/src/main/csv/dataReport.csv
