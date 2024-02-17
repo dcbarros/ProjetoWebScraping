@@ -1,13 +1,6 @@
 package com.davison.web_screping;
 
-import java.time.Duration;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.LocalDateTime;
 
 import com.davison.web_screping.bot.Scraper;
 
@@ -16,6 +9,5 @@ public class Main {
 
         Scraper scraper = new Scraper();
         scraper.run();
-
     }
 }

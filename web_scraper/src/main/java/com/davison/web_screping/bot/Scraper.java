@@ -16,6 +16,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.davison.web_screping.utils.CsvWriter;
+
 public class Scraper {
 
     private WebDriver driver;
@@ -23,7 +25,6 @@ public class Scraper {
     private String screenshotPath;
     private Integer waitingTime;
 
-    
     public Scraper(){
         loadConfig();
     }
@@ -65,11 +66,10 @@ public class Scraper {
                 
                 WebElement downloadInfo = driver.findElement(By.xpath("/html/body/div[1]/main/div/div[2]/div[2]/div[1]/div/div[1]/div[3]/div/div/div/div/div[2]/div[1]/div/div[1]/div[2]"));
                 WebElement uploadInfo = driver.findElement(By.xpath("/html/body/div[1]/main/div/div[2]/div[2]/div[1]/div/div[1]/div[3]/div/div/div/div/div[2]/div[1]/div/div[2]/div[2]"));
-                
+                String[] data = {downloadInfo.getText(), uploadInfo.getText(), LocalDateTime.now().toString() };
                 takeSreenshot();
-
-                System.out.printf("Download: %s - Upload: %s",downloadInfo.getText(), uploadInfo.getText());
-      
+                saveData(data);
+                      
             } catch (org.openqa.selenium.NoSuchElementException e) {
                 e.printStackTrace();
             }  
@@ -98,6 +98,13 @@ public class Scraper {
             java.nio.file.Paths.get(this.screenshotPath, saveFileStr),
             screenshotBytes
         );
+    }
+
+    private void saveData(String[] args) throws IOException{
+        try {
+            CsvWriter.writeToCsv(args);
+        } catch (Exception e) {
+        }
     }
 
 }
